@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<Void>  post(@RequestBody User user) {
         userService.save(user);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}")
@@ -39,12 +39,12 @@ public class UserController {
     public ResponseEntity<Void> put(@RequestBody User user, @PathVariable("id") long id) {
         user.setId(id);
         userService.update(user);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         userService.deleteById(id);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok().build();
     }   
 }

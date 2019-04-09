@@ -24,8 +24,7 @@ import java.util.List;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,18 +82,37 @@ public class TestUserController {
                 .content(jsonString)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status()
-                        .isAccepted());
+                        .isOk());
     }
 
     @Test
-    public void getUserById() {
+    public void givenUser_whenGetUserById_thenReturnJsonObject() throws Exception {
+        given(userService.findById(1)).willReturn(user);
+        
+        mvc.perform(get("/users/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("lastName").value(user.getLastName()));
     }
 
     @Test
-    public void put() {
+    public void whenPutUser_thenOk() throws Exception {
+        String jsonString = mapper.writeValueAsString(user);
+        
+        mvc.perform(put("/users/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status()
+                        .isOk());
     }
 
     @Test
-    public void delete() {
+    public void whenDeleteUser_thenOk() throws Exception {
+        mvc.perform(delete("/users/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status()
+                        .isOk());
     }
 }
