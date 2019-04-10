@@ -16,6 +16,9 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column
+    private long age;
+
     public long getId() {
         return id;
     }
@@ -40,12 +43,21 @@ public class User {
         this.lastName = lastName;
     }
 
+    public long getAge() {
+        return age;
+    }
+
+    public void setAge(long age) {
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", age=" + age +
                 '}';
     }
 }

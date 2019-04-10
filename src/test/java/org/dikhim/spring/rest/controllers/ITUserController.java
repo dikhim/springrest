@@ -45,7 +45,7 @@ public class ITUserController {
         whenPutUser_thenStatus200();
         whenDeleteUser_thenStatus200UserDeleted();
     }
-    
+
     public void whenPostUser_thenStatus200UserAdded() throws Exception {
         int usersSize = userService.findAll().size();
         User user = createUser();
@@ -104,13 +104,19 @@ public class ITUserController {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status()
                         .isOk());
-        assertEquals("Size of user list should have been decreased", usersSize -1, userService.findAll().size());
+        assertEquals("Size of user list should have been decreased", usersSize - 1, userService.findAll().size());
     }
 
     private static User createUser() {
         User user = new User();
         user.setFirstName("Serhii");
         user.setLastName("Muslanov");
+        user.setAge(12);
         return user;
+    }
+
+    private User getLastCreatedUser() {
+        List<User> users = userService.findAll();
+        return users.get(users.size() - 1);
     }
 }

@@ -47,6 +47,7 @@ public class TestUserController {
         user.setId(1);
         user.setFirstName("Serhii");
         user.setLastName("Muslanov");
+        user.setAge(12);
         this.user = user;
         users.add(user);
 
@@ -54,6 +55,7 @@ public class TestUserController {
         user.setId(2);
         user.setFirstName("Vladimir");
         user.setLastName("Ivanov");
+        user.setAge(13);
         users.add(user);
     }
 
@@ -66,7 +68,8 @@ public class TestUserController {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].firstName").value(user.getFirstName()))
-                .andExpect(jsonPath("$[0].lastName").value(user.getLastName()));
+                .andExpect(jsonPath("$[0].lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$[0].age").value(user.getAge()));
     }
 
     @Test
@@ -88,7 +91,8 @@ public class TestUserController {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("firstName").value(user.getFirstName()))
-                .andExpect(jsonPath("lastName").value(user.getLastName()));
+                .andExpect(jsonPath("lastName").value(user.getLastName()))
+                .andExpect(jsonPath("age").value(user.getAge()));
     }
 
     @Test
