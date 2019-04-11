@@ -35,19 +35,8 @@ public class ITUserController {
     @Autowired
     private ObjectMapper mapper;
 
-    private static long userId;
-
     @Test
-    public void testUserController() throws Exception {
-        whenPostUser_thenStatus200UserAdded();
-        whenGetUsers_thenReturnJsonArray();
-        whenGetUserById_thenReturnUser();
-        whenPutUser_thenStatus200();
-        whenDeleteUser_thenStatus200UserDeleted();
-    }
-
     public void whenPostUser_thenStatus200UserAdded() throws Exception {
-        int usersSize = userService.findAll().size();
         User user = createUser();
         String jsonString = mapper.writeValueAsString(user);
         mvc.perform(post("/users")
@@ -57,11 +46,14 @@ public class ITUserController {
                 .andExpect(status()
                         .isOk());
 
-        assertEquals("Size of user list should have been increased", usersSize + 1, userService.findAll().size());
-        List<User> users = userService.findAll();
-        userId = users.get(users.size() - 1).getId();
+        User lastCreatedUser = getLastCreatedUser();
+        assertEquals(user.getFirstName(),lastCreatedUser.getFirstName());
+        assertEquals(user.getLastName(),lastCreatedUser.getLastName());
+        assertEquals(user.getAge(),lastCreatedUser.getAge());
+        userService.deleteById(lastCreatedUser.getId());
     }
 
+    @Test
     public void whenGetUsers_thenReturnJsonArray() throws Exception {
         mvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -70,37 +62,49 @@ public class ITUserController {
                 .andExpect(jsonPath("$", hasSize(userService.findAll().size())));
     }
 
+    @Test
     public void whenGetUserById_thenReturnUser() throws Exception {
-        User user = userService.findById(userId);
-        mvc.perform(get("/users/" + userId)
+        User user = createUser();
+        userService.save(user);
+        mvc.perform(get("/users/" + user.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(user.getId()))
                 .andExpect(jsonPath("firstName").value(user.getFirstName()))
                 .andExpect(jsonPath("lastName").value(user.getLastName()));
+        userService.deleteById(user.getId());
     }
 
+    @Test
     public void whenPutUser_thenStatus200() throws Exception {
-        User user = userService.findById(userId);
-        user.setFirstName("Dmitrii");
-        user.setLastName("Ivanov");
+        User user = createUser();
+        userService.save(user);
+
+        user.setFirstName("Vlodimir");
+        user.setLastName("Petrov");
+        user.setAge(33);
+        
         String jsonString = mapper.writeValueAsString(user);
 
-        mvc.perform(put("/users/" + userId)
+        mvc.perform(put("/users/" + user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status()
                         .isOk());
-        User updatedUser = userService.findById(userId);
+        User updatedUser = userService.findById(user.getId());
         assertEquals(user.getId(), updatedUser.getId());
         assertEquals(user.getFirstName(), updatedUser.getFirstName());
         assertEquals(user.getLastName(), updatedUser.getLastName());
+        assertEquals(user.getAge(), updatedUser.getAge());
+        userService.deleteById(user.getId());
     }
 
     public void whenDeleteUser_thenStatus200UserDeleted() throws Exception {
+        User user = createUser();
+        userService.save(user);
         int usersSize = userService.findAll().size();
-        mvc.perform(delete("/users/" + userId)
+        mvc.perform(delete("/users/" + user.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status()
                         .isOk());
