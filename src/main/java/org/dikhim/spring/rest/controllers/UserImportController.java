@@ -28,7 +28,7 @@ public class UserImportController {
         this.userService = userService;
     }
 
-    @GetMapping("export")
+    @GetMapping("/export")
     public ResponseEntity<Void> exportUsersToCsv(HttpServletResponse response) {
         try {
             String userListCsv = converter.exportList(userService.findAll());
@@ -40,7 +40,7 @@ public class UserImportController {
         }
     }
 
-    @PostMapping("import")
+    @PostMapping("/import")
     public ResponseEntity<Void> importUsersFromCsv(@RequestParam("users") MultipartFile file) {
         try {
             String userListCsv = IOUtils.toString(file.getInputStream(),Charset.forName("utf-8"));

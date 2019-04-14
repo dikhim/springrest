@@ -1,7 +1,10 @@
 package org.dikhim.spring.rest.converter.csv;
 
 import com.opencsv.CSVReader;
-import com.opencsv.bean.*;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.dikhim.spring.rest.model.User;
@@ -9,11 +12,8 @@ import org.dikhim.spring.rest.model.User;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@SuppressWarnings("unchecked")
 public class UserCsvConverter {
     public String exportList(List<User> users) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
         StringWriter sw = new StringWriter();
