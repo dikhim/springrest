@@ -36,10 +36,10 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> put(@RequestBody User user, @PathVariable("id") long id) {
+    public User put(@RequestBody User user, @PathVariable("id") long id) {
         user.setId(id);
         userService.update(user);
-        return ResponseEntity.ok().build();
+        return user;
     }
 
     @DeleteMapping("/{id}")

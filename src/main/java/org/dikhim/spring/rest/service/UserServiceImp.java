@@ -5,11 +5,12 @@ import org.dikhim.spring.rest.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service("userService")
-public class UserServiceImp implements UserService{
-    
+public class UserServiceImp implements UserService {
+
     private UserRepository userRepository;
 
     @Autowired
@@ -24,7 +25,9 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User findById(long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with the id:%s is not found", id)));
+
     }
 
     @Override
@@ -39,6 +42,10 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void deleteById(long id) {
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new EntityNotFoundException(String.format("User with the id:%s is not found", id));
+        }
     }
 }
