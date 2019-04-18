@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void>  post(@RequestBody User user) {
+    public ResponseEntity<Void>  post(@RequestBody @Valid User user) {
         userService.save(user);
         return ResponseEntity.ok().build();
     }
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User put(@RequestBody User user, @PathVariable("id") long id) {
+    public User put(@RequestBody @Valid User user, @PathVariable("id") long id) {
         user.setId(id);
         userService.update(user);
         return user;

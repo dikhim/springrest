@@ -1,6 +1,9 @@
 package org.dikhim.spring.rest.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -12,12 +15,16 @@ public class User {
     private long id;
     
     @Column(name = "firs_name")
+    @Size(min = 3, max = 20,message = "Name length should be longer than 3 letters and shorter than 20")
     private String firstName;
     
     @Column(name = "last_name")
+    @Size(min = 3, max = 20,message = "Name length should be longer than 3 letters and shorter than 20")
     private String lastName;
 
     @Column
+    @Min(value = 18, message = "Age should be greater than 18")
+    @Max(value = 100, message = "Age should be less than 100")
     private long age;
 
     public long getId() {

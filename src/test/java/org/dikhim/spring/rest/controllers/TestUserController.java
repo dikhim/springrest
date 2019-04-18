@@ -114,4 +114,21 @@ public class TestUserController {
                 .andExpect(status()
                         .isOk());
     }
+    
+    @Test 
+    public void whenPostNotValidUser_thenBadRequest() throws Exception{
+        User notValidUser = new User();
+        notValidUser.setFirstName("Aa");
+        notValidUser.setLastName("Too long name Too long name Too long name");
+        notValidUser.setAge(101);
+
+        String jsonString = mapper.writeValueAsString(notValidUser);
+
+        mvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status()
+                        .isBadRequest());
+    }
 }
