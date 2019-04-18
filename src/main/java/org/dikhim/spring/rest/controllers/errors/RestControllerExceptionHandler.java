@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
@@ -25,26 +26,32 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             EntityNotFoundException ex) {
-        ApiError apiError = new ApiError(NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", NOT_FOUND);
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body,NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", status.value());
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body,headers,status);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", status.value());
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", status.value());
         List<String> errors = ex
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
-        result.put("errors", errors);
-        return new ResponseEntity<>(result, headers, status);
-    }
-
-    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        return new ResponseEntity<>(apiError, apiError.getStatus());
+        body.put("errors", errors);
+        return new ResponseEntity<>(body, headers, status);
     }
 }
