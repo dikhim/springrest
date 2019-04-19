@@ -47,7 +47,7 @@ public class TestUserController {
         user.setId(1);
         user.setFirstName("Serhii");
         user.setLastName("Muslanov");
-        user.setAge(12);
+        user.setAge(20);
         this.user = user;
         users.add(user);
 
@@ -55,7 +55,7 @@ public class TestUserController {
         user.setId(2);
         user.setFirstName("Vladimir");
         user.setLastName("Ivanov");
-        user.setAge(13);
+        user.setAge(21);
         users.add(user);
     }
 
