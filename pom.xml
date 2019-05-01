@@ -108,6 +108,46 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--Copy config files to the jar file location-->
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-file</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <sourceFile>src/main/resources/deployment/config.properties</sourceFile>
+                                    <destinationFile>target/config.properties</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>src/main/resources/deployment/schema.sql</sourceFile>
+                                    <destinationFile>target/schema.sql</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>src/main/resources/deployment/data.sql</sourceFile>
+                                    <destinationFile>target/data.sql</destinationFile>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>deployment/**</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

@@ -9,12 +9,20 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_account")
 public class User {
-    
+    public User() {
+    }
+
+    public User(@Size(min = 3, max = 20, message = "Name length should be longer than 3 letters and shorter than 20") String firstName, @Size(min = 3, max = 20, message = "Name length should be longer than 3 letters and shorter than 20") String lastName, @Min(value = 18, message = "Age should be greater than 18") @Max(value = 100, message = "Age should be less than 100") long age) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
-    @Column(name = "firs_name")
+    @Column(name = "first_name")
     @Size(min = 3, max = 20,message = "Name length should be longer than 3 letters and shorter than 20")
     private String firstName;
     
@@ -22,7 +30,7 @@ public class User {
     @Size(min = 3, max = 20,message = "Name length should be longer than 3 letters and shorter than 20")
     private String lastName;
 
-    @Column
+    @Column(name = "age")
     @Min(value = 18, message = "Age should be greater than 18")
     @Max(value = 100, message = "Age should be less than 100")
     private long age;
